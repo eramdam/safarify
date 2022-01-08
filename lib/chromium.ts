@@ -1,10 +1,9 @@
 import fs from "fs-extra";
-
 import _ from "lodash";
 import os from "os";
 import path from "path";
 import glob from "tiny-glob";
-import { BrowserProfile, Browsers, ChromiumExtension } from "./types";
+import { BrowserProfile, Browsers, ChromiumExtension } from "./types.js";
 
 export async function getChromeProfiles(
   variant: "Chrome" | "Chrome Canary"

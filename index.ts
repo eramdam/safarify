@@ -1,15 +1,19 @@
 import AdmZip from "adm-zip";
+import { execa, execaCommand } from "execa";
 import fs from "fs-extra";
 import inquirer from "inquirer";
 import _ from "lodash";
 import path from "path";
+import { URL } from "url";
 import {
   getChromeProfiles,
   getChromiumExtensions,
   getEdgeProfiles,
-} from "./lib/chromium";
-import { getFirefoxExtensions, getFirefoxProfiles } from "./lib/firefox";
-import { Browsers } from "./lib/types";
+} from "./lib/chromium.js";
+import { getFirefoxExtensions, getFirefoxProfiles } from "./lib/firefox.js";
+import { Browsers } from "./lib/types.js";
+
+const getDirName = () => new URL(".", import.meta.url).pathname;
 
 (async () => {
   const firefoxProfiles = await getFirefoxProfiles();
@@ -24,8 +28,14 @@ import { Browsers } from "./lib/types";
     .uniq()
     .value();
 
+  interface Answers {
+    browser: Browsers;
+    extension: { name: string; value: string };
+    profile: string;
+  }
+
   const result = await inquirer
-    .prompt([
+    .prompt<Answers>([
       {
         type: "list",
         name: "browser",
@@ -35,8 +45,8 @@ import { Browsers } from "./lib/types";
       {
         type: "list",
         name: "profile",
-        message: answers => `Choose your ${answers.browser} profile`,
-        choices: answers => {
+        message: (answers: Answers) => `Choose your ${answers.browser} profile`,
+        choices: (answers: Answers) => {
           switch (answers.browser) {
             case Browsers.CHROME:
               return chromeProfiles;
@@ -51,7 +61,7 @@ import { Browsers } from "./lib/types";
         type: "list",
         name: "extension",
         message: `Choose what extension to convert`,
-        choices: answers => {
+        choices: (answers: Answers) => {
           switch (answers.browser) {
             case Browsers.FIREFOX:
               return getFirefoxExtensions(answers.profile);
@@ -71,14 +81,29 @@ import { Browsers } from "./lib/types";
   if (browser === Browsers.FIREFOX) {
     console.log(`Extracting ${extension.name} to the current folder...`);
     const zip = new AdmZip(extension.value);
-    zip.extractAllTo(__dirname + "/safarify/" + extension.name, true);
+    zip.extractAllTo(
+      getDirName() + "/safarify/extensions/" + extension.name,
+      true
+    );
   } else {
     console.log(`Copying ${extension.name} to the current folder...`);
     await fs.copy(
       extension.value,
-      path.resolve(__dirname, "safarify", extension.name)
+      path.resolve(getDirName(), "safarify/", "extensions/", extension.name)
     );
   }
 
   console.log("Converting to a Safari extension project...");
+  const finalPath = path.resolve(
+    getDirName(),
+    "safarify",
+    "extensions",
+    extension.name
+  );
+  const convert = execaCommand(
+    `xcrun safari-web-extension-converter --project-location safarify --copy-resources --no-open --force --macos-only "${finalPath}"`,
+    { shell: true }
+  );
+  convert.stdout?.pipe(process.stdout);
+  convert.stderr?.pipe(process.stdout);
 })();

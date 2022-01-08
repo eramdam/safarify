@@ -5,7 +5,7 @@ import _ from "lodash";
 import os from "os";
 import path from "path";
 import glob from "tiny-glob";
-import { BrowserProfile, Browsers, FirefoxExtension } from "./types";
+import { BrowserProfile, Browsers, FirefoxExtension } from "./types.js";
 
 export async function getFirefoxProfiles(): Promise<BrowserProfile[]> {
   const firefoxFolder = path.resolve(
