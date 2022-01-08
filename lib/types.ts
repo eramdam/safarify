@@ -13,10 +13,16 @@ export interface BrowserProfile {
 export interface FirefoxExtension {
   name: string;
   file: string;
-  value: string;
+  value: {
+    name: string;
+    value: string;
+  };
 }
 
 export interface ChromiumExtension {
   name: string;
-  value: string;
+  value: {
+    name: string;
+    value: string;
+  };
 }

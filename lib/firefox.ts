@@ -1,5 +1,5 @@
 import AdmZip from "adm-zip";
-import fs from "fs/promises";
+import fs from "fs-extra";
 import ini from "ini";
 import _ from "lodash";
 import os from "os";
@@ -73,9 +73,12 @@ export async function getFirefoxExtensions(
       continue;
     }
     extensions.push({
-      name: name,
+      name,
       file,
-      value: file,
+      value: {
+        name,
+        value: file,
+      },
     });
   }
 

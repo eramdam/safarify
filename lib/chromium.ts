@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import fs from "fs-extra";
 
 import _ from "lodash";
 import os from "os";
@@ -75,7 +75,10 @@ export async function getChromiumExtensions(
     }
     extensions.push({
       name,
-      value: path.dirname(file),
+      value: {
+        name,
+        value: path.dirname(file),
+      },
     });
   }
 

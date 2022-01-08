@@ -1,5 +1,8 @@
+import AdmZip from "adm-zip";
+import fs from "fs-extra";
 import inquirer from "inquirer";
 import _ from "lodash";
+import path from "path";
 import {
   getChromeProfiles,
   getChromiumExtensions,
@@ -63,5 +66,19 @@ import { Browsers } from "./lib/types";
       return answers;
     });
 
-  console.log({ result });
+  const { extension, browser } = result;
+
+  if (browser === Browsers.FIREFOX) {
+    console.log(`Extracting ${extension.name} to the current folder...`);
+    const zip = new AdmZip(extension.value);
+    zip.extractAllTo(__dirname + "/safarify/" + extension.name, true);
+  } else {
+    console.log(`Copying ${extension.name} to the current folder...`);
+    await fs.copy(
+      extension.value,
+      path.resolve(__dirname, "safarify", extension.name)
+    );
+  }
+
+  console.log("Converting to a Safari extension project...");
 })();
