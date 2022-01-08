@@ -27,7 +27,7 @@ export async function getChromeProfiles(
       return {
         name: key,
         value: path.resolve(chromeFolder, key, "Extensions"),
-        browser: Browsers.CHROME
+        browser: Browsers.CHROME,
       };
     })
     .value();
@@ -53,7 +53,7 @@ export async function getEdgeProfiles(
       return {
         name: key,
         value: path.resolve(chromeFolder, key, "Extensions"),
-        browser: Browsers.EDGE
+        browser: Browsers.EDGE,
       };
     })
     .value();
@@ -63,7 +63,7 @@ export async function getChromiumExtensions(
   extensionsPath: string
 ): Promise<ChromiumExtension[]> {
   const manifestFiles = await glob(`${extensionsPath}/**/manifest.json`, {
-    absolute: true
+    absolute: true,
   });
 
   let extensions: ChromiumExtension[] = [];
@@ -75,7 +75,7 @@ export async function getChromiumExtensions(
     }
     extensions.push({
       name,
-      value: path.dirname(file)
+      value: path.dirname(file),
     });
   }
 

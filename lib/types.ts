@@ -1,7 +1,7 @@
 export enum Browsers {
   FIREFOX = "Firefox",
   EDGE = "Edge",
-  CHROME = "Chrome"
+  CHROME = "Chrome",
 }
 
 export interface BrowserProfile {

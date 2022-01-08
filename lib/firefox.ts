@@ -32,7 +32,7 @@ export async function getFirefoxProfiles(): Promise<BrowserProfile[]> {
       return {
         name: profile.Name,
         isRelative: profile.IsRelative,
-        path: profile.Path
+        path: profile.Path,
       };
     })
     .compact()
@@ -40,13 +40,19 @@ export async function getFirefoxProfiles(): Promise<BrowserProfile[]> {
       return {
         name: String(profile.name),
         value: path.resolve(firefoxFolder, profile.path, "extensions"),
-        browser: Browsers.FIREFOX
+        browser: Browsers.FIREFOX,
       };
     })
+    .sortBy(profile => profile.name)
     .orderBy(
-      [profile => profile.name.startsWith("default-"), profile => profile.name],
-      ["desc", "asc"]
+      [
+        profile =>
+          profile.name.includes("-release") || profile.name.includes("-esr"),
+        profile => profile.name.startsWith("default-"),
+      ],
+      "desc"
     )
+
     .value();
 
   return defaultProfiles;
@@ -56,7 +62,7 @@ export async function getFirefoxExtensions(
   extensionsPath: string
 ): Promise<FirefoxExtension[]> {
   const xpiFiles = await glob(`${extensionsPath}/*.xpi`, {
-    absolute: true
+    absolute: true,
   });
   let extensions: FirefoxExtension[] = [];
 
@@ -69,7 +75,7 @@ export async function getFirefoxExtensions(
     extensions.push({
       name: name,
       file,
-      value: file
+      value: file,
     });
   }
 

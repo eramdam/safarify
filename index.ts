@@ -3,7 +3,7 @@ import _ from "lodash";
 import {
   getChromeProfiles,
   getChromiumExtensions,
-  getEdgeProfiles
+  getEdgeProfiles,
 } from "./lib/chromium";
 import { getFirefoxExtensions, getFirefoxProfiles } from "./lib/firefox";
 import { Browsers } from "./lib/types";
@@ -15,7 +15,7 @@ import { Browsers } from "./lib/types";
   const installedBrowsers = _([
     ...firefoxProfiles,
     ...edgeProfiles,
-    ...chromeProfiles
+    ...chromeProfiles,
   ])
     .map(p => p.browser)
     .uniq()
@@ -27,7 +27,7 @@ import { Browsers } from "./lib/types";
         type: "list",
         name: "browser",
         message: "Choose a browser",
-        choices: installedBrowsers
+        choices: installedBrowsers,
       },
       {
         type: "list",
@@ -42,7 +42,7 @@ import { Browsers } from "./lib/types";
             case Browsers.EDGE:
               return edgeProfiles;
           }
-        }
+        },
       },
       {
         type: "list",
@@ -56,8 +56,8 @@ import { Browsers } from "./lib/types";
             case Browsers.EDGE:
               return getChromiumExtensions(answers.profile);
           }
-        }
-      }
+        },
+      },
     ])
     .then(answers => {
       return answers;
