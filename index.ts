@@ -101,9 +101,31 @@ const getDirName = () => new URL(".", import.meta.url).pathname;
     extension.name
   );
   const convert = execaCommand(
-    `xcrun safari-web-extension-converter --project-location safarify --copy-resources --no-open --force --macos-only "${finalPath}"`,
+    `xcrun safari-web-extension-converter --project-location safarify --copy-resources --force --macos-only "${finalPath}"`,
     { shell: true }
   );
-  convert.stdout?.pipe(process.stdout);
   convert.stderr?.pipe(process.stdout);
+  await convert;
+
+  console.log("Conversion done!");
+  console.log("\n");
+  console.log(
+    `
+  An Xcode project window should have opened, you should:
+  1. Click on "${extension.name}" in the left sidebar
+  2. Click on "${extension.name}" under "Targets"
+  3. Select the "Signing & Capabilities" tab
+  4. Check "Automatically manage signing"
+  5. Select a Team in order to sign the extension
+  6. Repeat steps 2 through 5 with "${extension.name} Extension"
+  `.trim()
+  );
+  console.log("\n");
+  console.log(
+    "After you are done with the above, you can safely quit Xcode and run the following command"
+  );
+  console.log("\n");
+  console.log(
+    `xcodebuild -config Release -project "safarify/${extension.name}/${extension.name}.xcodeproj/" build`
+  );
 })();
