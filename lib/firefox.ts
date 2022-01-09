@@ -82,7 +82,9 @@ export async function getFirefoxExtensions(
     });
   }
 
-  return extensions;
+  return _(extensions)
+    .sortBy(e => e.name)
+    .value();
 }
 
 function getExtensionName(extension: AdmZip): string | undefined {

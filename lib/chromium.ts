@@ -81,7 +81,9 @@ export async function getChromiumExtensions(
     });
   }
 
-  return extensions;
+  return _(extensions)
+    .sortBy(e => e.name)
+    .value();
 }
 
 async function getExtensionName(
