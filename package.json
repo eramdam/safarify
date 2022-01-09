@@ -1,8 +1,8 @@
 {
   "name": "safarify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Converts Chromium/Firefox extensions to Safari 14+ extensions",
-  "exports": "./index.js",
+  "exports": "./dist/index.js",
   "scripts": {
     "build": "tsc",
     "start": "node --loader ts-node/esm ./index.ts",
