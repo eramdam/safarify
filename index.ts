@@ -1,11 +1,13 @@
+#!/usr/bin/env node
 import AdmZip from "adm-zip";
 import clipboard from "clipboardy";
-import { execa, execaCommand } from "execa";
+import { execaCommand } from "execa";
 import fs from "fs-extra";
 import inquirer from "inquirer";
+// @ts-expect-error
+import inquirerSearch from "inquirer-search-list";
 import _ from "lodash";
 import path from "path";
-import { URL } from "url";
 import {
   getChromeProfiles,
   getChromiumExtensions,
@@ -13,10 +15,7 @@ import {
 } from "./lib/chromium.js";
 import { getFirefoxExtensions, getFirefoxProfiles } from "./lib/firefox.js";
 import { Browsers } from "./lib/types.js";
-// @ts-expect-error
-import inquirerSearch from "inquirer-search-list";
 
-const getDirName = () => new URL(".", import.meta.url).pathname;
 inquirer.registerPrompt("search-list", inquirerSearch);
 
 (async () => {
@@ -85,25 +84,17 @@ inquirer.registerPrompt("search-list", inquirerSearch);
   if (browser === Browsers.FIREFOX) {
     console.log(`Extracting ${extension.name} to the current folder...`);
     const zip = new AdmZip(extension.value);
-    zip.extractAllTo(
-      getDirName() + "/safarify/extensions/" + extension.name,
-      true
-    );
+    zip.extractAllTo("./safarify/extensions/" + extension.name, true);
   } else {
     console.log(`Copying ${extension.name} to the current folder...`);
     await fs.copy(
       extension.value,
-      path.resolve(getDirName(), "safarify/", "extensions/", extension.name)
+      path.resolve("./safarify/", "extensions/", extension.name)
     );
   }
 
   console.log("Converting to a Safari extension project...");
-  const finalPath = path.resolve(
-    getDirName(),
-    "safarify",
-    "extensions",
-    extension.name
-  );
+  const finalPath = path.resolve("./safarify", "extensions", extension.name);
   const convert = execaCommand(
     `xcrun safari-web-extension-converter --project-location safarify --copy-resources --force --macos-only "${finalPath}"`,
     { shell: true }
