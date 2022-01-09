@@ -15,21 +15,25 @@ export async function getChromeProfiles(
     "Google",
     variant
   );
-  const localStateFile = await fs.readFile(
-    path.resolve(chromeFolder, "Local State"),
-    "utf-8"
-  );
-  const localState = JSON.parse(localStateFile || "");
-  return _(localState.profile.info_cache)
-    .keys()
-    .map(key => {
-      return {
-        name: key,
-        value: path.resolve(chromeFolder, key, "Extensions"),
-        browser: Browsers.CHROME,
-      };
-    })
-    .value();
+  try {
+    const localStateFile = await fs.readFile(
+      path.resolve(chromeFolder, "Local State"),
+      "utf-8"
+    );
+    const localState = JSON.parse(localStateFile || "");
+    return _(localState.profile.info_cache)
+      .keys()
+      .map(key => {
+        return {
+          name: key,
+          value: path.resolve(chromeFolder, key, "Extensions"),
+          browser: Browsers.CHROME,
+        };
+      })
+      .value();
+  } catch (e) {
+    return [];
+  }
 }
 
 export async function getEdgeProfiles(
@@ -41,21 +45,26 @@ export async function getEdgeProfiles(
     "Application Support",
     `Microsoft ${variant}`
   );
-  const localStateFile = await fs.readFile(
-    path.resolve(chromeFolder, "Local State"),
-    "utf-8"
-  );
-  const localState = JSON.parse(localStateFile || "");
-  return _(localState.profile.info_cache)
-    .keys()
-    .map(key => {
-      return {
-        name: key,
-        value: path.resolve(chromeFolder, key, "Extensions"),
-        browser: Browsers.EDGE,
-      };
-    })
-    .value();
+
+  try {
+    const localStateFile = await fs.readFile(
+      path.resolve(chromeFolder, "Local State"),
+      "utf-8"
+    );
+    const localState = JSON.parse(localStateFile || "");
+    return _(localState.profile.info_cache)
+      .keys()
+      .map(key => {
+        return {
+          name: key,
+          value: path.resolve(chromeFolder, key, "Extensions"),
+          browser: Browsers.EDGE,
+        };
+      })
+      .value();
+  } catch (e) {
+    return [];
+  }
 }
 
 export async function getChromiumExtensions(

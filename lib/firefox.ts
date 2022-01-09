@@ -14,48 +14,52 @@ export async function getFirefoxProfiles(): Promise<BrowserProfile[]> {
     "Application Support",
     "Firefox"
   );
-  const profilesFile = await fs.readFile(
-    path.resolve(firefoxFolder, "profiles.ini"),
-    "utf-8"
-  );
-  const parsedIni = ini.parse(profilesFile);
+  try {
+    const profilesFile = await fs.readFile(
+      path.resolve(firefoxFolder, "profiles.ini"),
+      "utf-8"
+    );
+    const parsedIni = ini.parse(profilesFile);
 
-  const defaultProfiles = _(parsedIni)
-    .values()
-    .reject(profile => {
-      return profile.Locked === "1";
-    })
-    .map(profile => {
-      if (!profile.Name || !profile.IsRelative || !profile.Path) {
-        return undefined;
-      }
-      return {
-        name: profile.Name,
-        isRelative: profile.IsRelative,
-        path: profile.Path,
-      };
-    })
-    .compact()
-    .map(profile => {
-      return {
-        name: String(profile.name),
-        value: path.resolve(firefoxFolder, profile.path, "extensions"),
-        browser: Browsers.FIREFOX,
-      };
-    })
-    .sortBy(profile => profile.name)
-    .orderBy(
-      [
-        profile =>
-          profile.name.includes("-release") || profile.name.includes("-esr"),
-        profile => profile.name.startsWith("default-"),
-      ],
-      "desc"
-    )
+    const defaultProfiles = _(parsedIni)
+      .values()
+      .reject(profile => {
+        return profile.Locked === "1";
+      })
+      .map(profile => {
+        if (!profile.Name || !profile.IsRelative || !profile.Path) {
+          return undefined;
+        }
+        return {
+          name: profile.Name,
+          isRelative: profile.IsRelative,
+          path: profile.Path,
+        };
+      })
+      .compact()
+      .map(profile => {
+        return {
+          name: String(profile.name),
+          value: path.resolve(firefoxFolder, profile.path, "extensions"),
+          browser: Browsers.FIREFOX,
+        };
+      })
+      .sortBy(profile => profile.name)
+      .orderBy(
+        [
+          profile =>
+            profile.name.includes("-release") || profile.name.includes("-esr"),
+          profile => profile.name.startsWith("default-"),
+        ],
+        "desc"
+      )
 
-    .value();
+      .value();
 
-  return defaultProfiles;
+    return defaultProfiles;
+  } catch (e) {
+    return [];
+  }
 }
 
 export async function getFirefoxExtensions(

@@ -1,6 +1,6 @@
 {
   "name": "safarify",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Converts Chromium/Firefox extensions to Safari 14+ extensions",
   "exports": "./dist/index.js",
   "scripts": {
