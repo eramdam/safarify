@@ -1,4 +1,5 @@
 import AdmZip from "adm-zip";
+import clipboard from "clipboardy";
 import { execa, execaCommand } from "execa";
 import fs from "fs-extra";
 import inquirer from "inquirer";
@@ -125,10 +126,10 @@ inquirer.registerPrompt("search-list", inquirerSearch);
   );
   console.log("\n");
   console.log(
-    "After you are done with the above, you can safely quit Xcode and run the following command"
+    "After you are done with the above, you can safely quit Xcode and run the following command. It has been copied to your clipboard for convenient"
   );
   console.log("\n");
-  console.log(
-    `xcodebuild -config Release -project "safarify/${extension.name}/${extension.name}.xcodeproj/" build`
-  );
+  const buildCommand = `xcodebuild -config Release -project "safarify/${extension.name}/${extension.name}.xcodeproj/" build && open "safarify/${extension.name}/build/Release/${extension.name}.app"`;
+  console.log(buildCommand);
+  clipboard.writeSync(buildCommand);
 })();
