@@ -1,6 +1,6 @@
 {
   "name": "safarify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Converts Chromium/Firefox extensions to Safari 14+ extensions",
   "exports": "./index.js",
   "scripts": {
@@ -11,14 +11,19 @@
   "bin": "dist/index.js",
   "type": "module",
   "keywords": [],
-  "author": "",
+  "author": "Damien Erambert <damien@erambert.me>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eramdam/safarify.git"
+  },
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   },
   "files": [
-    "dist/**/*.js"
+    "dist/**/*.js",
+    "README.md"
   ],
-  "license": "ISC",
+  "license": "GNU AGPLv3",
   "dependencies": {
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
