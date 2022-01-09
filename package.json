@@ -4,12 +4,20 @@
   "description": "Converts Chromium/Firefox extensions to Safari 14+ extensions",
   "exports": "./index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --loader ts-node/esm ./index.ts"
+    "build": "tsc",
+    "start": "node --loader ts-node/esm ./index.ts",
+    "prepare": "npm run build"
   },
+  "bin": "dist/index.js",
   "type": "module",
   "keywords": [],
   "author": "",
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "files": [
+    "dist/**/*.js"
+  ],
   "license": "ISC",
   "dependencies": {
     "@types/adm-zip": "^0.4.34",
