@@ -12,8 +12,11 @@ import {
 } from "./lib/chromium.js";
 import { getFirefoxExtensions, getFirefoxProfiles } from "./lib/firefox.js";
 import { Browsers } from "./lib/types.js";
+// @ts-expect-error
+import inquirerSearch from "inquirer-search-list";
 
 const getDirName = () => new URL(".", import.meta.url).pathname;
+inquirer.registerPrompt("search-list", inquirerSearch);
 
 (async () => {
   const firefoxProfiles = await getFirefoxProfiles();
@@ -58,7 +61,7 @@ const getDirName = () => new URL(".", import.meta.url).pathname;
         },
       },
       {
-        type: "list",
+        type: "search-list",
         name: "extension",
         message: `Choose what extension to convert`,
         choices: (answers: Answers) => {
